@@ -7572,6 +7572,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ed2919adcbf6724198c9f6ac61094df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoffeeInteract
+  maxSips: 3
+  fatigueReductionPerSip: 25
+  protectionSecondsPerSip: 10
 --- !u!33 &479903048
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -25361,6 +25364,7 @@ GameObject:
   - component: {fileID: 1980303617}
   - component: {fileID: 1980303616}
   - component: {fileID: 1980303615}
+  - component: {fileID: 1980303621}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -25504,6 +25508,24 @@ Transform:
   - {fileID: 330585546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1980303621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980303614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f343f0775d3533a47a7222564e386d7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFatigue
+  maxFatigue: 100
+  currentFatigue: 0
+  fatigueIncreaseRate: 2
+  protectionTimer: 0
+  normalSpeed: 5
+  exhaustedSpeed: 2
 --- !u!43 &1986354843
 Mesh:
   m_ObjectHideFlags: 0
