@@ -5,15 +5,21 @@ public class PlayerFatigue : MonoBehaviour
     [Header("Fatigue Settings")]
     public float maxFatigue = 100f;
     public float currentFatigue = 0f;
-    public float fatigueIncreaseRate = 2f; // Fatigue gained per second
+    public float passiveFatigueRate = 1.5f; // Fatigue gained per second normally
+    public float workingFatigueRate = 5f;   // Faster drain while sitting at a task
+
+    [HideInInspector] public bool isWorking = false;
 
     [Header("Caffeine Protection")]
-    public float protectionTimer = 0f; // While > 0, fatigue stops increasing
+    public float protectionTimer = 0f;
 
     [Header("Exhaustion Penalty")]
     public float normalSpeed = 5f;
     public float exhaustedSpeed = 2f;
     private PlayerMovementCC playerMovement;
+
+    // Easy check for other scripts to see if player is exhausted
+    public bool IsExhausted => currentFatigue >= maxFatigue;
 
     void Start()
     {
@@ -26,19 +32,18 @@ public class PlayerFatigue : MonoBehaviour
 
     void Update()
     {
-        // 1. Check if caffeine protection is active
         if (protectionTimer > 0f)
         {
             protectionTimer -= Time.deltaTime;
         }
         else
         {
-            // 2. Increase fatigue over time when unprotected
-            currentFatigue += fatigueIncreaseRate * Time.deltaTime;
+            // Choose drain rate based on whether the player is currently doing a task
+            float activeRate = isWorking ? workingFatigueRate : passiveFatigueRate;
+            currentFatigue += activeRate * Time.deltaTime;
             currentFatigue = Mathf.Clamp(currentFatigue, 0f, maxFatigue);
         }
 
-        // 3. Apply slowdown if completely exhausted
         HandleExhaustion();
     }
 
@@ -46,23 +51,13 @@ public class PlayerFatigue : MonoBehaviour
     {
         if (playerMovement == null) return;
 
-        if (currentFatigue >= maxFatigue)
-        {
-            playerMovement.speed = exhaustedSpeed;
-        }
-        else
-        {
-            playerMovement.speed = normalSpeed;
-        }
+        playerMovement.speed = IsExhausted ? exhaustedSpeed : normalSpeed;
     }
 
-    // Called by CoffeeInteract when the player takes a sip
     public void ApplyCoffeeEffect(float fatigueReduction, float protectionDuration)
     {
         currentFatigue -= fatigueReduction;
         currentFatigue = Mathf.Clamp(currentFatigue, 0f, maxFatigue);
-
-        // Add or refresh caffeine shield
         protectionTimer = protectionDuration;
 
         Debug.Log($"Fatigue reduced to {Mathf.Round(currentFatigue)}! Protected for {protectionDuration}s.");

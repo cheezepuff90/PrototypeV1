@@ -103,6 +103,23 @@ public class CoffeeInteract : MonoBehaviour, IInteractable
         GetComponent<Collider>().enabled = true;
     }
 
+    public bool IsHeld()
+    {
+        return isHeld;
+    }
+
+    public bool Refill()
+    {
+        if(currentSips < maxSips)
+        {
+                currentSips = maxSips;
+                Debug.Log($"Coffee refilled! Sips: {currentSips}/{maxSips}");
+                return true;   
+        }
+        Debug.Log("Coffee mug is already full");
+        return false;
+    }
+
     public void OnHover() { }
     public void OnHoverExit() { }
 }
